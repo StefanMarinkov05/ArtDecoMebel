@@ -1,6 +1,6 @@
 # ArtDecoMebel
 
-Diploma project #25
+Diploma project #24
 
 Furniture organizer with catalogues
 
