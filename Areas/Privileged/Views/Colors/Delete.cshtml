@@ -1,0 +1,28 @@
+﻿@model ArtDecoMebel.Models.Color
+
+@{
+    ViewData["Title"] = "Изтриване на цвят";
+}
+
+<h1 class="mb-4">Изтриване на цвят</h1>
+
+<h5 class="text-warning">Сигурни ли сте, че искате да изтриете този цвят?</h5>
+
+<div class="card shadow-sm p-3 mb-3">
+    <dl class="row mb-0">
+        <dt class="col-sm-3 fw-bold">Име</dt>
+        <dd class="col-sm-9">@Model.Name</dd>
+    </dl>
+</div>
+
+<div class="d-flex gap-2">
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Изтрий
+        </button>
+    </form>
+    <a class="btn btn-secondary" asp-action="Index">
+        <i class="bi bi-arrow-left-circle"></i> Назад към списъка
+    </a>
+</div>

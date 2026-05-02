@@ -1,0 +1,40 @@
+﻿@model ArtDecoMebel.Models.Brand
+
+@{
+    ViewData["Title"] = "Изтриване на марка";
+}
+
+<h1 class="mb-4 text-danger">Изтриване на марка</h1>
+
+<div class="card shadow-sm p-4 mb-4">
+    <h4 class="mb-3">Сигурни ли сте, че искате да изтриете следната марка?</h4>
+
+    <dl class="row mb-4">
+        <dt class="col-sm-3 fw-bold">Име</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+    </dl>
+
+    <form asp-action="Delete" class="d-flex gap-2">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Изтрий
+        </button>
+        <a class="btn btn-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left"></i> Назад към списъка
+        </a>
+    </form>
+</div>
+
+<style>
+    dt {
+        font-size: 1rem;
+    }
+
+    dd {
+        font-size: 1rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+    }
+</style>

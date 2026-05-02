@@ -1,0 +1,218 @@
+﻿@model ArtDecoMebel.Models.Furniture
+
+@{
+    ViewData["Title"] = "Детайли за мебел";
+    var imgPng = Url.Content($"~/Mebeli/furniture{Model.Id}.png");
+    var imgJpg = Url.Content($"~/Mebeli/furniture{Model.Id}.jpg");
+    var defaultImg = Url.Content("~/Mebeli/default.png");
+}
+
+<h1 class="mb-4">@Model.Name</h1>
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <div class="shadow rounded overflow-hidden border border-light">
+            <img src="@imgPng" alt="@Model.Name" class="img-fluid furniture-img"
+                 onerror="this.onerror=null;this.src='@imgJpg'; this.onerror=function(){this.src='@defaultImg';}" />
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card shadow-lg border-0 p-4 info-card">
+            <h3 class="card-title text-gradient">@Model.Name</h3>
+            <p class="mb-2"><strong>Тип:</strong> @Model.FType?.Name</p>
+            <p class="mb-2"><strong>Марка:</strong> @Model.Brand?.Name</p>
+            <p class="mb-2"><strong>Помещение:</strong> @Model.Room?.Name</p>
+            <p class="mb-2"><strong>Размери:</strong> @Model.Length.ToString("0.##") × @Model.Width.ToString("0.##") × @Model.Height.ToString("0.##") см.</p>
+            <p class="mb-2"><strong>Произведен:</strong> @Model.ProductionYear г. (преди @(DateTime.Now.Year - Model.ProductionYear) години)</p>
+
+            <p class="mb-2">
+                <strong>Цветове:</strong>
+                @if (Model.Colors?.Any() == true)
+                {
+                    foreach (var c in Model.Colors)
+                    {
+                        <span class="badge color-badge">@c.Name</span>
+                    }
+                }
+                else
+                {
+                    <span>Няма данни</span>
+                }
+            </p>
+
+            <p class="mb-3">
+                <strong>Материали:</strong>
+                @if (Model.Materials?.Any() == true)
+                {
+                    foreach (var m in Model.Materials)
+                    {
+                        <span class="badge material-badge">@m.Name</span>
+                    }
+                }
+                else
+                {
+                    <span>Няма данни</span>
+                }
+            </p>
+
+            <div class="d-flex gap-2 mt-3">
+                <a class="btn btn-gradient-secondary" asp-action="Index">
+                    <i class="bi bi-arrow-left"></i> Обратно към списъка
+                </a>
+                <div class="dropdown">
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
+                                id="catalogMenu_@Model.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bookmark-plus"></i> Списък с каталози
+                        </button>
+                    }
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="catalogMenu_@Model.Id"
+                        style="max-height: 250px; overflow-y: auto;">
+
+
+                        @{
+                            var userCatalogs = ViewBag.Catalogs as List<ArtDecoMebel.Models.Catalog>;
+                            var currentFurnitureId = Model.Id;
+                        }
+
+                        @if (userCatalogs != null && userCatalogs.Any())
+                        {
+                            @foreach (var catalog in userCatalogs.Take(5))
+                            {
+                                var isPresent = catalog.Furnitures != null && catalog.Furnitures.Any(f => f.Id == currentFurnitureId);
+                                var btnClass = isPresent ? "btn-success" : "btn-outline-secondary";
+
+                                <li>
+                                    <div class="d-flex align-items-center justify-content-between p-2">
+
+                                        <span class="btn @btnClass btn-sm me-2 flex-grow-1" style="pointer-events: none;">
+                                            @catalog.Name
+                                        </span>
+
+                                        <a asp-area="Underprivileged" asp-controller="Catalogs" asp-action="Details"
+                                           asp-route-id="@catalog.Id" class="btn btn-info btn-sm me-1" title="Преглед на каталог">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        @if (isPresent)
+                                        {
+                                            <form asp-area="Underprivileged" asp-controller="Catalogs" asp-action="RemoveFurniture" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="catalogId" value="@catalog.Id" />
+                                                <input type="hidden" name="furnitureId" value="@currentFurnitureId" />
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Премахване от каталог">
+                                                    <i class="bi bi-dash-circle"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form asp-area="Underprivileged" asp-controller="Catalogs" asp-action="AddFurniture" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="catalogId" value="@catalog.Id" />
+                                                <input type="hidden" name="furnitureId" value="@currentFurnitureId" />
+                                                <button type="submit" class="btn btn-success btn-sm" title="Добавяне към каталог">
+                                                    <i class="bi bi-plus-circle"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </li>
+                            }
+
+                            <li><hr class="dropdown-divider"></li>
+                        }
+                        else
+                        {
+                            <li>
+                                <span class="dropdown-item disabled text-muted">Нямате каталози</span>
+                            </li>
+                        }
+
+                        <li>
+                            <a asp-area="Underprivileged" asp-controller="Catalogs" asp-action="Create" class="dropdown-item text-primary">
+                                <i class="bi bi-folder-plus"></i> Добави нов каталог
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-gradient {
+        background: linear-gradient(90deg, #ff7e5f, #feb47b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        font-size: 1.6rem;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+    }
+
+    .furniture-img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-bottom: 3px solid #ff7e5f;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .furniture-img:hover {
+            transform: scale(1.05);
+        }
+
+    .badge {
+        margin-right: 5px;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+        padding: 0.35em 0.6em;
+        border-radius: 0.6rem;
+        font-weight: 500;
+    }
+
+    .color-badge {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .material-badge {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .btn-gradient-primary {
+        background: linear-gradient(90deg, #ff7e5f, #feb47b);
+        color: white;
+        border: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .btn-gradient-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+    .btn-gradient-secondary {
+        background: linear-gradient(90deg, #6c757d, #adb5bd);
+        color: white;
+        border: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .btn-gradient-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+    p {
+        font-size: 1rem;
+    }
+</style>

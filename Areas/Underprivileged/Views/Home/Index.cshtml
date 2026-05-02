@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "АртДекоМебел";
+}
+
+<div class="hero-section d-flex align-items-center justify-content-center text-center text-white">
+    <div class="hero-content">
+        <h1 class="display-3 fw-bold text-gradient">АртДекоМебел</h1>
+        <p class="lead mb-4 hero-subtext">Открий своя стил в интериора – модерни мебели, цветове и материали за всеки вкус</p>
+        <a class="btn btn-gradient-hero btn-lg shadow-lg" asp-area="Underprivileged" asp-controller="Furnitures" asp-action="Index">
+            Виж нашите мебели <i class="bi bi-arrow-right-circle ms-2"></i>
+        </a>
+    </div>
+</div>
+
+<div class="featured-section container my-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card card-hover shadow-sm">
+                <img src="@Url.Content("~/Mebeli/furniture1.jpg")" class="card-img-top" alt="Модерен диван">
+                <div class="card-body text-center bg-gradient-card">
+                    <h5 class="card-title text-gradient">Модерен диван</h5>
+                    <p class="card-text">Комфорт и стил в едно – за всеки хол.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-hover shadow-sm">
+                <img src="~/Mebeli/furniture2.jpg" class="card-img-top" alt="Елегантна маса">
+                <div class="card-body text-center bg-gradient-card">
+                    <h5 class="card-title text-gradient">Елегантна маса</h5>
+                    <p class="card-text">Перфектна за уютни вечери и модерни трапезарии.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-hover shadow-sm">
+                <img src="~/Mebeli/furniture3.jpg" class="card-img-top" alt="Стилни столове">
+                <div class="card-body text-center bg-gradient-card">
+                    <h5 class="card-title text-gradient">Стилни столове</h5>
+                    <p class="card-text">Комбинирай удобство и дизайн в едно.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.4)), url('/images/hero-bg.jpg') center/cover no-repeat;
+        background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1500&q=80');
+        height: 80vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-content {
+        padding: 3rem 2rem;
+        border-radius: 15px;
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .text-gradient {
+        background: linear-gradient(90deg, #ff7e5f, #feb47b, #86a8e7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtext {
+        font-size: 1.2rem;
+        background: linear-gradient(90deg, #f8ff00, #3ad59f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeIn 2s ease-in;
+    }
+
+    .btn-gradient-hero {
+        background: linear-gradient(135deg, #ff7e5f, #feb47b, #86a8e7);
+        color: white;
+        font-size: 1.2rem;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        border: none;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+        .btn-gradient-hero:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+    /* Featured Cards */
+    .card-hover {
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .card-hover:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .card-body.bg-gradient-card {
+        background: linear-gradient(135deg, rgba(255,126,95,0.2), rgba(134,168,231,0.2));
+    }
+
+    .card-title.text-gradient {
+        font-size: 1.2rem;
+        font-weight: bold;
+        background: linear-gradient(90deg, #ff7e5f, #feb47b, #86a8e7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+</style>

@@ -1,0 +1,127 @@
+﻿@model ArtDecoMebel.Models.Catalog
+
+@{
+    ViewData["Title"] = "Детайли за каталог";
+}
+
+<h1 class="mb-4">Детайли за каталог</h1>
+
+<div class="card shadow-sm border-0 p-4 mb-4">
+    <h4 class="mb-3">Информация за каталога</h4>
+    <dl class="row mb-0">
+        <dt class="col-sm-2">Потребител (ID)</dt>
+        <dd class="col-sm-10">@Model.ApplicationUser.Id</dd>
+
+        <dt class="col-sm-2">Имейл</dt>
+        <dd class="col-sm-10">@Model.ApplicationUser.Email</dd>
+
+        <dt class="col-sm-2">Име на каталог</dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+    </dl>
+
+    <div class="mt-3">
+        <form asp-area="Privileged" asp-controller="Catalogs" asp-action="DeleteConfirmed"
+              method="post"
+              style="display: inline;"
+              onsubmit="return confirm('Сигурни ли сте, че искате да изтриете каталог \'@Model.Name\'?');">
+
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i> Изтрий
+            </button>
+        </form>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Обратно към списъка
+        </a>
+    </div>
+</div>
+
+<h4 class="mb-3">Мебели в каталога</h4>
+
+@if (Model.Furnitures != null && Model.Furnitures.Any())
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var furn in Model.Furnitures)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 card-hover position-relative">
+
+                    <form asp-area="Underprivileged" asp-controller="Catalogs" asp-action="RemoveFurniture" method="post"
+                          class="position-absolute" style="top: 10px; right: 10px; z-index: 10;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="catalogId" value="@Model.Id" />
+                        <input type="hidden" name="furnitureId" value="@furn.Id" />
+                        <button type="submit" class="btn btn-light btn-sm rounded-circle shadow-sm border-0"
+                                title="Премахни от каталога"
+                                style="width: 32px; height: 32px; line-height: 1; padding: 0;"
+                                onclick="return confirm('Премахване на @furn.Name?');">
+                            ❌
+                        </button>
+                    </form>
+
+                    @{
+                        var imgPng = Url.Content($"~/Mebeli/furniture{furn.Id}.png");
+                        var imgJpg = Url.Content($"~/Mebeli/furniture{furn.Id}.jpg");
+                        var defaultImg = Url.Content("~/Mebeli/default.png");
+                    }
+                    <img src="@imgPng" class="card-img-top" alt="@furn.Name"
+                         onerror="this.onerror=null;this.src='@imgJpg'; this.onerror=function(){this.src='@defaultImg';}" />
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">@furn.FType?.Name @furn.Name</h5>
+                        <p class="mb-1"><strong>Марка:</strong> @furn.Brand?.Name</p>
+                        <p class="mb-1"><strong>Произведен:</strong> @furn.ProductionYear г.</p>
+
+                        <div class="mt-auto d-flex gap-2">
+                            <a asp-area="Underprivileged" asp-controller="Furnitures" asp-action="Details" asp-route-id="@furn.Id"
+                               class="btn btn-primary btn-sm flex-grow-1">
+                                <i class="bi bi-eye"></i> Виж повече
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">Този каталог все още няма добавени мебели.</p>
+}
+
+<style>
+    .card-hover {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        background: linear-gradient(135deg, #fefefe, #f0f0f0);
+    }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+        }
+
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+        border-bottom: 3px solid #007bff;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        color: #007bff;
+    }
+
+    .card-body p {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+</style>

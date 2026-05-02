@@ -1,0 +1,82 @@
+﻿@model IEnumerable<ArtDecoMebel.Models.Furniture>
+
+@{
+    ViewData["Title"] = "Мебели";
+}
+
+<h1 class="mb-4">Мебели</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success mb-3">
+        <i class="bi bi-plus-circle"></i> Създай нова мебел
+    </a>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Снимка</th>
+                <th>Мебел</th>
+                <th>Марка</th>
+                <th>Помещение</th>
+                <th>Размери (см)</th>
+                <th>Производство</th>
+                <th>Цветове</th>
+                <th>Материали</th>
+                <th class="text-center">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var imgPng = Url.Content($"~/Mebeli/furniture{item.Id}.png");
+                var imgJpg = Url.Content($"~/Mebeli/furniture{item.Id}.jpg");
+                var defaultImg = Url.Content("~/Mebeli/default.png");
+
+                <tr>
+                    <td>
+                        <img src="@imgPng" alt="@item.Name" class="table-img"
+                             onerror="this.onerror=null;this.src='@imgJpg'; this.onerror=function(){this.src='@defaultImg';}" />
+                    </td>
+                    <td>@item.FType?.Name @item.Name</td>
+                    <td>@item.Brand?.Name</td>
+                    <td>@item.Room?.Name</td>
+                    <td>@item.Length.ToString("0.##") × @item.Width.ToString("0.##") × @item.Height.ToString("0.##")</td>
+                    <td>@item.ProductionYear</td>
+                    <td>@(item.Colors?.Any() == true ? string.Join(", ", item.Colors.Select(c => c.Name)) : "Няма")</td>
+                    <td>@(item.Materials?.Any() == true ? string.Join(", ", item.Materials.Select(m => m.Name)) : "Няма")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary mb-1">
+                            <i class="bi bi-pencil-square"></i> Редактирай
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info mb-1 text-white">
+                            <i class="bi bi-eye"></i> Виж
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger mb-1">
+                            <i class="bi bi-trash"></i> Изтрий
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 0.25rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f0f8ff;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-sm i {
+        margin-right: 0.2rem;
+    }
+</style>

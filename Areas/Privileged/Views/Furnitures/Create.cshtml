@@ -1,0 +1,118 @@
+﻿@model ArtDecoMebel.Models.Furniture
+
+@{
+    ViewData["Title"] = "Създай мебел";
+}
+
+<h1 class="mb-4">Създай мебел</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    Основна информация
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label asp-for="Name" class="form-label fw-bold">Име</label>
+                        <input asp-for="Name" class="form-control" placeholder="Напр. Диван Оскар" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="BrandId" class="form-label fw-bold">Марка</label>
+                            <select asp-for="BrandId" class="form-control" asp-items="ViewBag.BrandId">
+                                <option value="">-- Избери марка --</option>
+                            </select>
+                            <span asp-validation-for="BrandId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="RoomId" class="form-label fw-bold">Помещение</label>
+                            <select asp-for="RoomId" class="form-control" asp-items="ViewBag.RoomId">
+                                <option value="">-- Избери помещение --</option>
+                            </select>
+                            <span asp-validation-for="RoomId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="TypeId" class="form-label fw-bold">Тип мебел</label>
+                            <select asp-for="TypeId" class="form-control" asp-items="ViewBag.TypeId">
+                                <option value="">-- Избери тип --</option>
+                            </select>
+                            <span asp-validation-for="TypeId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ImageFile" class="form-label fw-bold">Снимка</label>
+                        <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        <small class="text-muted">Разрешени формати: .jpg, .jpeg, .png</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    Детайли и Характеристики
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="form-label fw-bold">Цветове</label>
+                            <select multiple class="form-control" asp-items="ViewBag.ColorIds" name="ColorIds" style="height: 120px;"></select>
+                            <small class="text-muted">Задръжте Ctrl (или Cmd), за да изберете няколко.</small>
+                        </div>
+                        <div class="col-md-6 form-group mb-3">
+                            <label class="form-label fw-bold">Материали</label>
+                            <select multiple class="form-control" asp-items="ViewBag.MaterialIds" name="MaterialIds" style="height: 120px;"></select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3 form-group mb-3">
+                            <label asp-for="Length" class="form-label">Дължина (см)</label>
+                            <input asp-for="Length" class="form-control" type="number" />
+                            <span asp-validation-for="Length" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 form-group mb-3">
+                            <label asp-for="Width" class="form-label">Ширина (см)</label>
+                            <input asp-for="Width" class="form-control" type="number" />
+                            <span asp-validation-for="Width" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 form-group mb-3">
+                            <label asp-for="Height" class="form-label">Височина (см)</label>
+                            <input asp-for="Height" class="form-control" type="number" />
+                            <span asp-validation-for="Height" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3 form-group mb-3">
+                            <label asp-for="ProductionYear" class="form-label">Година</label>
+                            <input asp-for="ProductionYear" class="form-control" type="number" />
+                            <span asp-validation-for="ProductionYear" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4 mb-5">
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Назад
+                </a>
+                <button type="submit" class="btn btn-success btn-lg px-5">
+                    <i class="bi bi-check-circle"></i> Създай
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

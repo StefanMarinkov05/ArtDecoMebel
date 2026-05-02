@@ -1,0 +1,26 @@
+﻿@model ArtDecoMebel.Models.Room
+
+@{
+    ViewData["Title"] = "Изтрий помещение";
+}
+
+<h1 class="mb-3 text-danger">Изтрий помещение</h1>
+
+<p class="lead">Сигурни ли сте, че искате да изтриете това помещение?</p>
+
+<div class="card p-3 mb-3 shadow-sm">
+    <dl class="row mb-0">
+        <dt class="col-sm-3 fw-semibold">Име на помещение</dt>
+        <dd class="col-sm-9">@Model.Name</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Изтрий
+    </button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">
+        <i class="bi bi-arrow-left"></i> Обратно към списъка
+    </a>
+</form>

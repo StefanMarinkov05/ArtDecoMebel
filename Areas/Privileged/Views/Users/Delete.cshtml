@@ -1,0 +1,42 @@
+﻿@model ArtDecoMebel.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Изтриване на потребител";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-danger text-white rounded-top-3">
+            <h3 class="mb-0"><i class="bi bi-person-x"></i> Потвърждение за изтриване</h3>
+        </div>
+        <div class="card-body">
+            <p class="lead text-danger">
+                <strong>⚠️ Внимание:</strong> Сигурни ли сте, че искате да изтриете потребителя <strong>@Model.Nickname</strong>?
+            </p>
+
+            <dl class="row mb-4">
+                <dt class="col-sm-4 fw-bold">№</dt>
+                <dd class="col-sm-8">@Model.Id</dd>
+
+                <dt class="col-sm-4 fw-bold">Псевдоним</dt>
+                <dd class="col-sm-8">@Model.Nickname</dd>
+
+                <dt class="col-sm-4 fw-bold">Имейл</dt>
+                <dd class="col-sm-8">@Model.Email</dd>
+
+                <dt class="col-sm-4 fw-bold">Телефон</dt>
+                <dd class="col-sm-8">@Model.PhoneNumber</dd>
+            </dl>
+
+            <form asp-action="Delete" method="post" class="d-flex justify-content-between">
+                <input type="hidden" asp-for="Id" />
+                <a asp-action="Index" class="btn btn-secondary btn-lg shadow-sm">
+                    <i class="bi bi-arrow-left"></i> Отказ
+                </a>
+                <button type="submit" class="btn btn-danger btn-lg shadow-sm">
+                    <i class="bi bi-trash"></i> Изтрий
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

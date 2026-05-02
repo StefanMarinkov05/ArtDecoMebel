@@ -1,0 +1,22 @@
+﻿@model ArtDecoMebel.Models.Material
+
+@{
+    ViewData["Title"] = "Изтриване";
+}
+
+<h1 class="mb-4">Изтриване на материал</h1>
+
+<div class="card p-3 shadow-sm border-0">
+    <h5 class="mb-3">Сигурни ли сте, че искате да изтриете този материал?</h5>
+
+    <dl class="row mb-3">
+        <dt class="col-sm-3">Име</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+    </dl>
+
+    <form asp-action="Delete" class="d-flex gap-2">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Изтрий" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Откажи</a>
+    </form>
+</div>

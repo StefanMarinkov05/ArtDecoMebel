@@ -1,0 +1,262 @@
+﻿@model IEnumerable<ArtDecoMebel.Models.Furniture>
+
+@{
+    ViewData["Title"] = "Мебели";
+}
+
+<h1 class="mb-4">Мебели</h1>
+
+<div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+    <input id="furnitureSearch"
+           type="text"
+           class="form-control form-control-lg"
+           style="flex:2"
+           placeholder="Търси мебели... (вид, стая, марка, цветове, материали)">
+
+    <select id="typeFilter" class="form-select form-select-lg" style="flex:1">
+        <option value="">Всички видове</option>
+        @foreach (var typeName in Model.Where(m => m.FType != null).Select(m => m.FType.Name).Distinct().OrderBy(n => n))
+        {
+            <option value="@typeName">@typeName</option>
+        }
+    </select>
+
+    <a class="btn btn-outline-primary"
+       href="@Url.Action("Index", new { sortBy = "name", sortOrder = ViewBag.NameSortOrder == "asc" ? "desc" : "asc" })">
+        Име @((ViewBag.NameSortOrder == "asc") ? "↑" : "↓")
+    </a>
+
+    <a class="btn btn-outline-primary"
+       href="@Url.Action("Index", new { sortBy = "year", sortOrder = ViewBag.YearSortOrder == "asc" ? "desc" : "asc" })">
+        Производство @((ViewBag.YearSortOrder == "asc") ? "↑" : "↓")
+    </a>
+</div>
+
+
+<div id="furnitureContainer" class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col furniture-card" data-type="@item.FType?.Name">
+            <div class="card h-100 shadow-lg border-0 card-hover">
+                @{
+                    var imgPng = Url.Content($"~/Mebeli/furniture{item.Id}.png");
+                    var imgJpg = Url.Content($"~/Mebeli/furniture{item.Id}.jpg");
+                    var defaultImg = Url.Content("~/Mebeli/default.png");
+                }
+
+                <img src="@imgPng" class="card-img-top" alt="@item.Name"
+                     onerror="this.onerror=null;this.src='@imgJpg'; this.onerror=function(){this.src='@defaultImg';}" />
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">@item.Name</h5>
+                    <p class="mb-1"><strong>Вид:</strong> @item.FType?.Name</p>
+                    <p class="mb-1"><strong>Марка:</strong> @item.Brand?.Name</p>
+                    <p class="mb-1"><strong>Помещение:</strong> @item.Room?.Name</p>
+                    <p class="mb-1"><strong>Размери:</strong> @item.Length.ToString("0.##") × @item.Width.ToString("0.##") × @item.Height.ToString("0.##") см.</p>
+                    <p class="mb-1"><strong>Произведен:</strong> @item.ProductionYear г. (преди @(DateTime.Now.Year - item.ProductionYear) години) </p>
+
+                    <p class="mb-1">
+                        <strong>Цветове:</strong>
+                        @if(item.Colors?.Any() == true)
+                        {
+                            foreach(var c in item.Colors)
+                            {
+                                <span class="badge color-badge">@c.Name</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Няма данни</span>
+                        }
+                    </p>
+
+                    <p class="mb-3">
+                        <strong>Материали:</strong>
+                        @if(item.Materials?.Any() == true)
+                        {
+                            foreach(var m in item.Materials)
+                            {
+                                <span class="badge material-badge">@m.Name</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Няма данни</span>
+                        }
+                    </p>
+
+                    <div class="mt-auto d-flex justify-content-between">
+                        <a class="btn btn-primary btn-sm btn-block" asp-action="Details" asp-route-id="@item.Id">
+                            <i class="bi bi-eye"></i> Виж повече
+                        </a>
+                        <div class="dropdown">
+                            @if (User.Identity?.IsAuthenticated ?? false)
+                            {
+                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
+                                        id="catalogMenu_@item.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-bookmark-plus"></i> Списък с каталози
+                                </button>
+                            }
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="catalogMenu_@item.Id"
+                                style="max-height: 250px; overflow-y: auto;">
+
+
+                                @{
+                                    var userCatalogs = ViewBag.Catalogs as List<ArtDecoMebel.Models.Catalog>;
+                                    var currentFurnitureId = item.Id;
+                                }
+
+                                @if (userCatalogs != null && userCatalogs.Any())
+                                {
+                                    @foreach (var catalog in userCatalogs.Take(5))
+                                    {
+                                        var isPresent = catalog.Furnitures != null && catalog.Furnitures.Any(f => f.Id == currentFurnitureId);
+                                        var btnClass = isPresent ? "btn-success" : "btn-outline-secondary";
+
+                                        <li>
+                                            <div class="d-flex align-items-center justify-content-between p-2">
+
+                                                @* 1. Catalog Name Button *@
+                                                <span class="btn @btnClass btn-sm me-2 flex-grow-1" style="pointer-events: none;">
+                                                    @catalog.Name
+                                                </span>
+
+                                                @* View Catalog Button *@
+                                                <a asp-area="Underprivileged" asp-controller="Catalogs" asp-action="Details"
+                                                   asp-route-id="@catalog.Id" class="btn btn-info btn-sm me-1" title="Преглед на каталог">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+
+                                                @if (isPresent)
+                                                {
+                                                    @* Remove Button *@
+                                                    <form asp-area="Underprivileged" asp-controller="Catalogs" asp-action="RemoveFurniture" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="catalogId" value="@catalog.Id" />
+                                                        <input type="hidden" name="furnitureId" value="@currentFurnitureId" />
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Премахване от каталог">
+                                                            <i class="bi bi-dash-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    @* Add Button *@
+                                                    <form asp-area="Underprivileged" asp-controller="Catalogs" asp-action="AddFurniture" method="post">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="catalogId" value="@catalog.Id" />
+                                                        <input type="hidden" name="furnitureId" value="@currentFurnitureId" />
+                                                        <button type="submit" class="btn btn-success btn-sm" title="Добавяне към каталог">
+                                                            <i class="bi bi-plus-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </li>
+                                    }
+
+                                    <li><hr class="dropdown-divider"></li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <span class="dropdown-item disabled text-muted">Нямате каталози</span>
+                                    </li>
+                                }
+
+                                @* Add New Catalog Button *@
+                                <li>
+                                    <a asp-area="Underprivileged" asp-controller="Catalogs" asp-action="Create" class="dropdown-item text-primary">
+                                        <i class="bi bi-folder-plus"></i> Добави нов каталог
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    /* Card styling */
+    .card-hover {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+        background: linear-gradient(135deg, #fefefe, #f0f0f0);
+    }
+
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 3px solid #007bff;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+        color: #007bff;
+    }
+
+    .card-body p {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        font-size: 0.85rem;
+        border-radius: 8px;
+    }
+
+    /* Badges for colors and materials */
+    .badge {
+        margin-right: 3px;
+        margin-bottom: 2px;
+        font-size: 0.8rem;
+        padding: 0.35em 0.5em;
+    }
+
+    .color-badge {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .material-badge {
+        background-color: #ffc107;
+        color: #212529;
+    }
+</style>
+
+<script>
+    const searchInput = document.getElementById("furnitureSearch");
+    const typeFilter = document.getElementById("typeFilter");
+    const cards = document.querySelectorAll(".furniture-card");
+
+    function filterFurniture() {
+        const query = searchInput.value.toLowerCase().trim();
+        const selectedType = typeFilter.value.toLowerCase();
+
+        cards.forEach(card => {
+            const cardText = card.innerText.toLowerCase();
+            const cardType = (card.getAttribute("data-type") || "").toLowerCase();
+
+            const matchesSearch = cardText.includes(query);
+
+            const matchesType = selectedType === "" || cardType === selectedType;
+
+            if (matchesSearch && matchesType) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+
+    searchInput.addEventListener("input", filterFurniture);
+    typeFilter.addEventListener("change", filterFurniture);
+</script>

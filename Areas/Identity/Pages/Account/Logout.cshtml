@@ -1,0 +1,52 @@
+﻿@page
+@model LogoutModel
+
+@{
+    ViewData["Title"] = "Изход";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <section class="card shadow-sm border-0 p-4">
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <p>Вие сте влезли в системата. Можете да излезете чрез бутона по-долу:</p>
+                <form class="d-grid" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                    <button type="submit" class="btn btn-danger btn-lg w-100">
+                        <i class="bi bi-box-arrow-right"></i> Изход
+                    </button>
+                </form>
+            }
+            else
+            {
+                <p>Успешно сте излезли от приложението.</p>
+                <a asp-page="/Account/Login" class="btn btn-primary mt-3">
+                    <i class="bi bi-box-arrow-in-right"></i> Вход
+                </a>
+            }
+        </section>
+    </div>
+</div>
+
+<style>
+    h1 {
+        color: #007bff;
+    }
+
+    .card {
+        border-radius: 15px;
+        background: linear-gradient(135deg, #fefefe, #f0f0f0);
+    }
+
+    .btn {
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: transform 0.2s;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+</style>

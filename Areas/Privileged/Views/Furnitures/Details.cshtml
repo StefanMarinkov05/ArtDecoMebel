@@ -1,0 +1,73 @@
+﻿@model ArtDecoMebel.Models.Furniture
+
+@{
+    ViewData["Title"] = "Мебел";
+    var imgPng = Url.Content($"~/Mebeli/furniture{Model.Id}.png");
+    var imgJpg = Url.Content($"~/Mebeli/furniture{Model.Id}.jpg");
+    var defaultImg = Url.Content("~/Mebeli/default.png");
+}
+
+<h1 class="mb-4">@Model.FType?.Name @Model.Name</h1>
+
+<div class="row g-4">
+    <div class="col-md-4 text-center">
+        <img src="@imgPng" alt="@Model.Name" class="img-fluid rounded shadow"
+             onerror="this.onerror=null;this.src='@imgJpg'; this.onerror=function(){this.src='@defaultImg';}" />
+    </div>
+    <div class="col-md-8">
+        <dl class="row">
+            <dt class="col-sm-4">Марка</dt>
+            <dd class="col-sm-8">@Model.Brand?.Name</dd>
+
+            <dt class="col-sm-4">Помещение</dt>
+            <dd class="col-sm-8">@Model.Room?.Name</dd>
+
+            <dt class="col-sm-4">Размери (см)</dt>
+            <dd class="col-sm-8">
+                @Model.Length.ToString("0.##") × @Model.Width.ToString("0.##") × @Model.Height.ToString("0.##")
+            </dd>
+
+            <dt class="col-sm-4">Производство</dt>
+            <dd class="col-sm-8">@Model.ProductionYear</dd>
+
+            <dt class="col-sm-4">Цветове</dt>
+            <dd class="col-sm-8">
+                @(Model.Colors?.Any() == true ? string.Join(", ", Model.Colors.Select(c => c.Name)) : "Няма")
+            </dd>
+
+            <dt class="col-sm-4">Материали</dt>
+            <dd class="col-sm-8">
+                @(Model.Materials?.Any() == true ? string.Join(", ", Model.Materials.Select(m => m.Name)) : "Няма")
+            </dd>
+        </dl>
+
+        <div class="mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">
+                <i class="bi bi-pencil-square"></i> Редактирай
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Обратно към списъка
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    dt {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    dd {
+        font-size: 0.95rem;
+    }
+
+    .img-fluid {
+        max-height: 400px;
+        object-fit: cover;
+    }
+
+    .btn i {
+        margin-right: 0.3rem;
+    }
+</style>

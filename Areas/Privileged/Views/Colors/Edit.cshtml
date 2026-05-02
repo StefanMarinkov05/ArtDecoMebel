@@ -1,0 +1,37 @@
+﻿@model ArtDecoMebel.Models.Color
+
+@{
+    ViewData["Title"] = "Редактиране на цвят";
+}
+
+<h1 class="mb-4">Редактиране на цвят</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-bold"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Запази
+                </button>
+                <a class="btn btn-secondary" asp-action="Index">
+                    <i class="bi bi-arrow-left-circle"></i> Назад към списъка
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

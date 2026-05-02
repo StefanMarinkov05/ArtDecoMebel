@@ -1,0 +1,98 @@
+﻿@model IEnumerable<ArtDecoMebel.Models.Catalog>
+
+@{
+    ViewData["Title"] = "Моите Каталози";
+}
+
+<h1 class="mb-4 text-center">Моите Каталози</h1>
+
+<div class="text-end mb-4">
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Създай нов каталог
+    </a>
+</div>
+
+<div class="row g-4">
+
+    @foreach (var catalog in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <h4 class="card-title text-primary">@catalog.Name</h4>
+                    <p class="text-muted">Мебели в каталога: <strong>@catalog.Furnitures.Count</strong></p>
+
+                    <hr />
+
+                    <h6 class="text-secondary mb-2">Преглед на първите 4 мебели:</h6>
+
+                    @if (catalog.Furnitures.Any())
+                    {
+                        <ul class="list-group list-group-flush mb-3">
+
+                            @foreach (var furniture in catalog.Furnitures.Take(4))
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <form asp-action="RemoveFurniture" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="catalogId" value="@catalog.Id" />
+                                            <input type="hidden" name="furnitureId" value="@furniture.Id" />
+                                            <button type="submit" class="border-0 bg-transparent p-0 me-2" title="Премахни"
+                                                    onclick="return confirm('Премахване на @furniture.Name?');">
+                                                ❌
+                                            </button>
+                                        </form>
+                                        <span>@furniture.FType?.Name @furniture.Name</span>
+                                    </div>
+
+                                    <a asp-area="Underprivileged" asp-controller="Furnitures" asp-action="Details" asp-route-id="@furniture.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Виж повече
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+
+                        @if (catalog.Furnitures.Count > 4)
+                        {
+                            <div class="text-center">
+                                <a asp-action="Details" asp-route-id="@catalog.Id" class="btn btn-link">
+                                    Показване на всички →
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Няма добавени мебели.</p>
+                    }
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Details" asp-route-id="@catalog.Id" class="btn btn-info btn-sm text-white">
+                            <i class="bi bi-eye"></i> Детайли
+                        </a>
+
+                        <form asp-area="Underprivileged" asp-controller="Catalogs" asp-action="DeleteConfirmed"
+                              asp-route-id="@catalog.Id" method="post"
+                              style="display: inline;"
+                              onsubmit="return confirm('Сигурни ли сте, че искате да изтриете каталог \'@catalog.Name\'?');">
+
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Изтрий
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>

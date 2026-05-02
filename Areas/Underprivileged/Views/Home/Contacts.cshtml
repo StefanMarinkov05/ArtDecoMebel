@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Контакти";
+}
+
+<div class="hero-section hero-contacts d-flex align-items-center justify-content-center text-center text-white">
+    <div class="hero-content">
+        <h1 class="display-4 fw-bold text-gradient">Свържете се с нас</h1>
+        <p class="lead hero-subtext">
+            Имате въпроси, идеи или нужда от консултация? Ние сме тук.
+        </p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row g-5">
+
+        <div class="col-lg-5">
+            <div class="contact-card shadow-lg p-4 h-100">
+                <h4 class="text-gradient fw-bold mb-4">📍 Контактна информация</h4>
+
+                <p class="mb-3">
+                    <strong>АртДекоМебел</strong><br />
+                    Модерни мебели и интериорни решения
+                </p>
+
+                <p class="mb-2">
+                    📌 <strong>Адрес:</strong><br />
+                    гр. София, бул. Интериор 42
+                </p>
+
+                <p class="mb-2">
+                    📞 <strong>Телефон:</strong><br />
+                    +359 89 967 5848
+                </p>
+
+                <p class="mb-2">
+                    ✉️ <strong>Email:</strong><br />
+                    contact@artdecomebel.bg
+                </p>
+
+                <p class="mb-0">
+                    🕒 <strong>Работно време:</strong><br />
+                    Понеделник – Петък: 09:00 – 18:00
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="contact-card shadow-lg p-4">
+                <h4 class="text-gradient fw-bold mb-4">✉️ Изпратете ни съобщение</h4>
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Име</label>
+                        <input type="text" class="form-control" placeholder="Вашето име" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Имейл</label>
+                        <input type="email" class="form-control" placeholder="email@example.com" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Телефон (по желание)</label>
+                        <input type="text" class="form-control" placeholder="+359..." />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Съобщение</label>
+                        <textarea class="form-control" rows="5"
+                                  placeholder="Напишете вашето запитване тук..."
+                                  required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-gradient-hero w-100">
+                        Изпрати съобщението
+                        <i class="bi bi-send ms-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .hero-contacts {
+        background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.45)),
+                    url('~/images/contact-bg.jpg') center/cover no-repeat;
+        height: 60vh;
+    }
+
+    .contact-card {
+        background: linear-gradient(135deg,
+            rgba(255,126,95,0.15),
+            rgba(134,168,231,0.15));
+        border-radius: 16px;
+        color: #222;
+    }
+
+    .contact-card p {
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255,126,95,.25);
+        border-color: #ff7e5f;
+    }
+</style>
